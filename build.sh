@@ -18,18 +18,44 @@ exit_with_error() {
 mkdir -vp $this_script_dir/mkosi.extra/usr/local/bin
 
 download() {
-	local url="$1"
+	local base_url="$1"
+	local file_name="$2"
+	local expected_hash="$3"
+
+	if [ -f "/tmp/$file_name" ]; then
+
+		echo "$expected_hash  /tmp/$file_name" | sha256sum --check --status
+
+		if [ $? -eq 0 ]; then
+
+			echo_stderr "File already cached, and has the expected checksum, so skipping download: /tmp/$file_name"
+
+			return
+
+		fi
+
+		echo_stderr "File already cached, but doesn't have the expected checksum, so ignoring it: /tmp/$file_name"
+
+	fi
+
+	local url="$base_url/$file_name"
 
 	curl -f -L --output-dir /tmp/ -O "$url" \
 		|| exit_with_error "curl failed with exit code $?"
+
+	echo "$expected_hash  /tmp/$file_name" | sha256sum --check --status \
+		|| exit_with_error "Downloaded file checksum didn't match the expected one"
+
+	echo_stderr "File successfully downloaded, having the expected checksum: /tmp/$file_name"
 }
 
 # Ethereum
 
 GETH_FILE_NAME="geth-alltools-linux-amd64-1.17.4-36a7dc72.tar.gz"
-GETH_URL="https://gethstore.blob.core.windows.net/builds/$GETH_FILE_NAME"
+GETH_URL="https://gethstore.blob.core.windows.net/builds"
+GETH_EXPECTED_CHECKSUM="7424a07bad62aa16482e2857b3021ced4840d31f5e59f62d588579ec568a138d"
 
-download "$GETH_URL"
+download "$GETH_URL" "$GETH_FILE_NAME" "$GETH_EXPECTED_CHECKSUM"
 
 tar -xvzf "/tmp/$GETH_FILE_NAME" -C $this_script_dir/mkosi.extra/usr/local/bin/ \
 	|| exit_with_error "tar failed with exit code $?"
@@ -37,9 +63,10 @@ tar -xvzf "/tmp/$GETH_FILE_NAME" -C $this_script_dir/mkosi.extra/usr/local/bin/ 
 # Bitcoin
 
 ELECTRUM_FILE_NAME="electrum-4.7.2-x86_64.AppImage"
-ELECTRUM_URL="https://download.electrum.org/4.7.2/$ELECTRUM_FILE_NAME"
+ELECTRUM_URL="https://download.electrum.org/4.7.2"
+ELECTRUM_EXPECTED_CHECKSUM="cf775fb74a182ca53041b513b49b5ffb414610057c2b6d43037f1c4e77e5065a"
 
-download "$ELECTRUM_URL"
+download "$ELECTRUM_URL" "$ELECTRUM_FILE_NAME" "$ELECTRUM_EXPECTED_CHECKSUM"
 
 cp -v "/tmp/$ELECTRUM_FILE_NAME" $this_script_dir/mkosi.extra/usr/local/bin \
 	|| exit_with_error "cp failed with exit code $?"
