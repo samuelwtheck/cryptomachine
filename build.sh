@@ -52,10 +52,10 @@ download() {
 # Ethereum
 
 GETH_FILE_NAME="geth-alltools-linux-amd64-1.17.4-36a7dc72.tar.gz"
-GETH_URL="https://gethstore.blob.core.windows.net/builds"
+GETH_BASE_URL="https://gethstore.blob.core.windows.net/builds"
 GETH_EXPECTED_CHECKSUM="7424a07bad62aa16482e2857b3021ced4840d31f5e59f62d588579ec568a138d"
 
-download "$GETH_URL" "$GETH_FILE_NAME" "$GETH_EXPECTED_CHECKSUM"
+download "$GETH_BASE_URL" "$GETH_FILE_NAME" "$GETH_EXPECTED_CHECKSUM"
 
 tar -xvzf "/tmp/$GETH_FILE_NAME" -C $this_script_dir/mkosi.extra/usr/local/bin/ \
 	|| exit_with_error "tar failed with exit code $?"
@@ -64,10 +64,10 @@ tar -xvzf "/tmp/$GETH_FILE_NAME" -C $this_script_dir/mkosi.extra/usr/local/bin/ 
 
 ELECTRUM_VERSION="4.8.1"
 ELECTRUM_FILE_NAME="electrum-$ELECTRUM_VERSION-x86_64.AppImage"
-ELECTRUM_URL="https://download.electrum.org/$ELECTRUM_VERSION"
+ELECTRUM_BASE_URL="https://download.electrum.org/$ELECTRUM_VERSION"
 ELECTRUM_EXPECTED_CHECKSUM="bf97d9cf5d429fabfe70c3975e0e4137bdefb9bbaa80e7d0f4783281b3eb77e6"
 
-download "$ELECTRUM_URL" "$ELECTRUM_FILE_NAME" "$ELECTRUM_EXPECTED_CHECKSUM"
+download "$ELECTRUM_BASE_URL" "$ELECTRUM_FILE_NAME" "$ELECTRUM_EXPECTED_CHECKSUM"
 
 cp -v "/tmp/$ELECTRUM_FILE_NAME" $this_script_dir/mkosi.extra/usr/local/bin \
 	|| exit_with_error "cp failed with exit code $?"
