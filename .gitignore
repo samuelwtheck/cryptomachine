@@ -1,0 +1,7 @@
+mkosi.cache
+mkosi.extra
+
+image
+image.*
+initrd
+initrd.*
