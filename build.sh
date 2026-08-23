@@ -28,7 +28,8 @@ ln -vfs ./$ELECTRUM_FILE_NAME ./mkosi.extra/usr/local/bin/electrum
 
 # Helper scripts
 
-install -v ./balance.sh ./mkosi.extra/usr/local/bin/
+install -v ./cryptoscripts/balance.sh ./mkosi.extra/usr/local/bin/
+install -v ./cryptoscripts/sign.sh    ./mkosi.extra/usr/local/bin/
 
 # Service presets
 
