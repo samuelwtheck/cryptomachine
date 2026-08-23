@@ -62,9 +62,10 @@ tar -xvzf "/tmp/$GETH_FILE_NAME" -C $this_script_dir/mkosi.extra/usr/local/bin/ 
 
 # Bitcoin
 
-ELECTRUM_FILE_NAME="electrum-4.7.2-x86_64.AppImage"
-ELECTRUM_URL="https://download.electrum.org/4.7.2"
-ELECTRUM_EXPECTED_CHECKSUM="cf775fb74a182ca53041b513b49b5ffb414610057c2b6d43037f1c4e77e5065a"
+ELECTRUM_VERSION="4.8.1"
+ELECTRUM_FILE_NAME="electrum-$ELECTRUM_VERSION-x86_64.AppImage"
+ELECTRUM_URL="https://download.electrum.org/$ELECTRUM_VERSION"
+ELECTRUM_EXPECTED_CHECKSUM="bf97d9cf5d429fabfe70c3975e0e4137bdefb9bbaa80e7d0f4783281b3eb77e6"
 
 download "$ELECTRUM_URL" "$ELECTRUM_FILE_NAME" "$ELECTRUM_EXPECTED_CHECKSUM"
 
