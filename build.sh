@@ -22,31 +22,31 @@ download() {
 	local file_name="$2"
 	local expected_hash="$3"
 
-	if [ -f "/tmp/$file_name" ]; then
+	if [ -f "/var/tmp/$file_name" ]; then
 
-		echo "$expected_hash  /tmp/$file_name" | sha256sum --check --status
+		echo "$expected_hash  /var/tmp/$file_name" | sha256sum --check --status
 
 		if [ $? -eq 0 ]; then
 
-			echo_stderr "File already cached, and has the expected checksum, so skipping download: /tmp/$file_name"
+			echo_stderr "File already cached, and has the expected checksum, so skipping download: /var/tmp/$file_name"
 
 			return
 
 		fi
 
-		echo_stderr "File already cached, but doesn't have the expected checksum, so ignoring it: /tmp/$file_name"
+		echo_stderr "File already cached, but doesn't have the expected checksum, so ignoring it: /var/tmp/$file_name"
 
 	fi
 
 	local url="$dir_url/$file_name"
 
-	curl -f -L --output-dir /tmp/ -O "$url" \
+	curl -f -L --output-dir /var/tmp/ -O "$url" \
 		|| exit_with_error "curl failed with exit code $?"
 
-	echo "$expected_hash  /tmp/$file_name" | sha256sum --check --status \
+	echo "$expected_hash  /var/tmp/$file_name" | sha256sum --check --status \
 		|| exit_with_error "Downloaded file checksum didn't match the expected one"
 
-	echo_stderr "File successfully downloaded, having the expected checksum: /tmp/$file_name"
+	echo_stderr "File successfully downloaded, having the expected checksum: /var/tmp/$file_name"
 }
 
 # Ethereum
@@ -57,7 +57,7 @@ geth_expected_checksum="7424a07bad62aa16482e2857b3021ced4840d31f5e59f62d588579ec
 
 download "$geth_dir_url" "$geth_file_name" "$geth_expected_checksum"
 
-tar -xvzf "/tmp/$geth_file_name" -C $this_script_dir/mkosi.extra/usr/local/bin/ \
+tar -xvzf "/var/tmp/$geth_file_name" -C $this_script_dir/mkosi.extra/usr/local/bin/ \
 	|| exit_with_error "tar failed with exit code $?"
 
 # Bitcoin
@@ -69,7 +69,7 @@ electrum_expected_checksum="bf97d9cf5d429fabfe70c3975e0e4137bdefb9bbaa80e7d0f478
 
 download "$electrum_dir_url" "$electrum_file_name" "$electrum_expected_checksum"
 
-cp -v "/tmp/$electrum_file_name" "$this_script_dir/mkosi.extra/usr/local/bin" \
+cp -v "/var/tmp/$electrum_file_name" "$this_script_dir/mkosi.extra/usr/local/bin" \
 	|| exit_with_error "cp failed with exit code $?"
 
 chmod +x "$this_script_dir/mkosi.extra/usr/local/bin/$electrum_file_name" \
