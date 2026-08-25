@@ -1,6 +1,6 @@
 #!/bin/bash
 
-this_script_dir=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)
+this_script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &>/dev/null && pwd)"
 
 echo_stderr() {
 	local message="$1"
@@ -15,7 +15,7 @@ exit_with_error() {
 	exit 1
 }
 
-mkdir -vp $this_script_dir/mkosi.extra/usr/local/bin
+mkdir -vp "$this_script_dir/mkosi.extra/usr/local/bin"
 
 download() {
 	local dir_url="$1"
@@ -69,13 +69,13 @@ electrum_expected_checksum="bf97d9cf5d429fabfe70c3975e0e4137bdefb9bbaa80e7d0f478
 
 download "$electrum_dir_url" "$electrum_file_name" "$electrum_expected_checksum"
 
-cp -v "/tmp/$electrum_file_name" $this_script_dir/mkosi.extra/usr/local/bin \
+cp -v "/tmp/$electrum_file_name" "$this_script_dir/mkosi.extra/usr/local/bin" \
 	|| exit_with_error "cp failed with exit code $?"
 
-chmod +x $this_script_dir/mkosi.extra/usr/local/bin/$electrum_file_name \
+chmod +x "$this_script_dir/mkosi.extra/usr/local/bin/$electrum_file_name" \
 	|| exit_with_error "chmod failed with exit code $?"
 
-ln -vfs ./$electrum_file_name $this_script_dir/mkosi.extra/usr/local/bin/electrum \
+ln -vfs "./$electrum_file_name" "$this_script_dir/mkosi.extra/usr/local/bin/electrum" \
 	|| exit_with_error "ln failed with exit code $?"
 
 # Helper scripts
@@ -95,10 +95,10 @@ install_script "cryptoscripts/eth/sign.sh"    "eth-sign.sh"
 
 # Service presets
 
-mkdir -vp this_script_dir/mkosi.extra/usr/lib/systemd/system-preset \
+mkdir -vp "$this_script_dir/mkosi.extra/usr/lib/systemd/system-preset" \
 	|| exit_with_error "mkdir failed with exit code $?"
 
-cp -v $this_script_dir/systemd.preset $this_script_dir/mkosi.extra/usr/lib/systemd/system-preset/90-custom.preset \
+cp -v "$this_script_dir/systemd.preset" "$this_script_dir/mkosi.extra/usr/lib/systemd/system-preset/90-custom.preset" \
 	|| exit_with_error "cp failed with exit code $?"
 
 # mkosi
