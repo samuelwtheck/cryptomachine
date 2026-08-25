@@ -22,20 +22,20 @@ wallets_dir="/root/.electrum/wallets"
 mkdir -vp "$wallets_dir" \
     || exit_with_error "mkdir returned non-zero exit code $?"
 
-electrum --offline restore "$pubkey" -w ~/.electrum/wallets/watch_only_wallet \
+electrum --offline restore "$pubkey" -w "$wallets_dir/watch_only_wallet" \
     || exit_with_error "electrum returned non-zero exit code $?"
 
 electrum daemon -d \
     || exit_with_error "electrum returned non-zero exit code $?"
 
-electrum load_wallet -w ~/.electrum/wallets/watch_only_wallet \
+electrum load_wallet -w "$wallets_dir/watch_only_wallet" \
     || exit_with_error "electrum returned non-zero exit code $?"
 
 # TODO: Handle subshell errors
-BTC_BALANCE=$(electrum getbalance -w ~/.electrum/wallets/watch_only_wallet | jq -r '.confirmed')
+BTC_BALANCE=$(electrum getbalance -w "$wallets_dir/watch_only_wallet" | jq -r '.confirmed')
 
 electrum setconfig use_exchange_rate true \
     || exit_with_error "electrum returned non-zero exit code $?"
 
-electrum convert_currency --from_amount $BTC_BALANCE --from_ccy BTC --to_ccy EUR \
+electrum convert_currency --from_amount "$BTC_BALANCE" --from_ccy BTC --to_ccy EUR \
     || exit_with_error "electrum returned non-zero exit code $?"
