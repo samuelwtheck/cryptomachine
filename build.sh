@@ -80,8 +80,18 @@ ln -vfs ./$ELECTRUM_FILE_NAME $this_script_dir/mkosi.extra/usr/local/bin/electru
 
 # Helper scripts
 
-install -v $this_script_dir/cryptoscripts/balance.sh $this_script_dir/mkosi.extra/usr/local/bin/ || exit_with_error "install failed with exit code $?"
-install -v $this_script_dir/cryptoscripts/sign.sh    $this_script_dir/mkosi.extra/usr/local/bin/ || exit_with_error "install failed with exit code $?"
+install_script() {
+	local src_path="$1"
+	local dest_file_name="$2"
+
+	install -v "$this_script_dir/$src_path" "$this_script_dir/mkosi.extra/usr/local/bin/$dest_file_name" \
+		|| exit_with_error "install failed with exit code $?"
+}
+
+install_script "cryptoscripts/btc/balance.sh" "btc-balance.sh"
+install_script "cryptoscripts/btc/sign.sh"    "btc-sign.sh"
+install_script "cryptoscripts/eth/balance.sh" "eth-balance.sh"
+install_script "cryptoscripts/eth/sign.sh"    "eth-sign.sh"
 
 # Service presets
 
