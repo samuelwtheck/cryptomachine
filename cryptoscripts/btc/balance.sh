@@ -1,15 +1,41 @@
 #!/bin/bash
 
+echo_stderr() {
+    local message="$1"
+
+    >&2 echo "$message"
+}
+
+exit_with_error() {
+    local message="$1"
+
+    echo_stderr "error: $message"
+    exit 1
+}
+
+test "$#" -eq 1 || exit_with_error "Wrong number of arguments. Expected one, got $#"
+
 pubkey="$1"
 
-mkdir -vp /root/.electrum/wallets
+wallets_dir="/root/.electrum/wallets"
 
-electrum --offline restore "$pubkey" -w ~/.electrum/wallets/watch_only_wallet
-electrum daemon -d
-electrum load_wallet -w ~/.electrum/wallets/watch_only_wallet
+mkdir -vp "$wallets_dir" \
+    || exit_with_error "mkdir returned non-zero exit code $?"
 
+electrum --offline restore "$pubkey" -w ~/.electrum/wallets/watch_only_wallet \
+    || exit_with_error "electrum returned non-zero exit code $?"
+
+electrum daemon -d \
+    || exit_with_error "electrum returned non-zero exit code $?"
+
+electrum load_wallet -w ~/.electrum/wallets/watch_only_wallet \
+    || exit_with_error "electrum returned non-zero exit code $?"
+
+# TODO: Handle subshell errors
 BTC_BALANCE=$(electrum getbalance -w ~/.electrum/wallets/watch_only_wallet | jq -r '.confirmed')
 
-electrum setconfig use_exchange_rate true
+electrum setconfig use_exchange_rate true \
+    || exit_with_error "electrum returned non-zero exit code $?"
 
-electrum convert_currency --from_amount $BTC_BALANCE --from_ccy BTC --to_ccy EUR
+electrum convert_currency --from_amount $BTC_BALANCE --from_ccy BTC --to_ccy EUR \
+    || exit_with_error "electrum returned non-zero exit code $?"
