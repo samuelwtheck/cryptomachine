@@ -13,7 +13,7 @@ exit_with_error() {
     exit 1
 }
 
-test "$#" -eq 1 || exit_with_error "Wrong number of arguments. Expected one, got $#"
+test "$#" -eq 1 || exit_with_error "Wrong number of arguments. Expected one (your bitcoin wallet's master public key), got $#"
 
 pubkey="$1"
 
