@@ -11,7 +11,7 @@ echo_stderr() {
 exit_with_error() {
 	local message="$1"
 
-	echo_stderr "$message"
+	echo_stderr "error: $message"
 	exit 1
 }
 
