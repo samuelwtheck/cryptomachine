@@ -15,6 +15,8 @@ exit_with_error() {
 
 test "$#" -eq 1 || exit_with_error "Wrong number of arguments. Expected one (your bitcoin wallet's master public key), got $#"
 
+# TODO: Allow specifying multiple master public keys, for multisig wallets
+
 pubkey="$1"
 
 wallets_dir="/root/.electrum/wallets"
