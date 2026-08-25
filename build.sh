@@ -18,7 +18,7 @@ exit_with_error() {
 mkdir -vp $this_script_dir/mkosi.extra/usr/local/bin
 
 download() {
-	local base_url="$1"
+	local dir_url="$1"
 	local file_name="$2"
 	local expected_hash="$3"
 
@@ -38,7 +38,7 @@ download() {
 
 	fi
 
-	local url="$base_url/$file_name"
+	local url="$dir_url/$file_name"
 
 	curl -f -L --output-dir /tmp/ -O "$url" \
 		|| exit_with_error "curl failed with exit code $?"
@@ -51,31 +51,31 @@ download() {
 
 # Ethereum
 
-GETH_FILE_NAME="geth-alltools-linux-amd64-1.17.4-36a7dc72.tar.gz"
-GETH_BASE_URL="https://gethstore.blob.core.windows.net/builds"
-GETH_EXPECTED_CHECKSUM="7424a07bad62aa16482e2857b3021ced4840d31f5e59f62d588579ec568a138d"
+geth_file_name="geth-alltools-linux-amd64-1.17.4-36a7dc72.tar.gz"
+geth_dir_url="https://gethstore.blob.core.windows.net/builds"
+geth_expected_checksum="7424a07bad62aa16482e2857b3021ced4840d31f5e59f62d588579ec568a138d"
 
-download "$GETH_BASE_URL" "$GETH_FILE_NAME" "$GETH_EXPECTED_CHECKSUM"
+download "$geth_dir_url" "$geth_file_name" "$geth_expected_checksum"
 
-tar -xvzf "/tmp/$GETH_FILE_NAME" -C $this_script_dir/mkosi.extra/usr/local/bin/ \
+tar -xvzf "/tmp/$geth_file_name" -C $this_script_dir/mkosi.extra/usr/local/bin/ \
 	|| exit_with_error "tar failed with exit code $?"
 
 # Bitcoin
 
-ELECTRUM_VERSION="4.8.1"
-ELECTRUM_FILE_NAME="electrum-$ELECTRUM_VERSION-x86_64.AppImage"
-ELECTRUM_BASE_URL="https://download.electrum.org/$ELECTRUM_VERSION"
-ELECTRUM_EXPECTED_CHECKSUM="bf97d9cf5d429fabfe70c3975e0e4137bdefb9bbaa80e7d0f4783281b3eb77e6"
+electrum_version="4.8.1"
+electrum_file_name="electrum-$electrum_version-x86_64.AppImage"
+electrum_dir_url="https://download.electrum.org/$electrum_version"
+electrum_expected_checksum="bf97d9cf5d429fabfe70c3975e0e4137bdefb9bbaa80e7d0f4783281b3eb77e6"
 
-download "$ELECTRUM_BASE_URL" "$ELECTRUM_FILE_NAME" "$ELECTRUM_EXPECTED_CHECKSUM"
+download "$electrum_dir_url" "$electrum_file_name" "$electrum_expected_checksum"
 
-cp -v "/tmp/$ELECTRUM_FILE_NAME" $this_script_dir/mkosi.extra/usr/local/bin \
+cp -v "/tmp/$electrum_file_name" $this_script_dir/mkosi.extra/usr/local/bin \
 	|| exit_with_error "cp failed with exit code $?"
 
-chmod +x $this_script_dir/mkosi.extra/usr/local/bin/$ELECTRUM_FILE_NAME \
+chmod +x $this_script_dir/mkosi.extra/usr/local/bin/$electrum_file_name \
 	|| exit_with_error "chmod failed with exit code $?"
 
-ln -vfs ./$ELECTRUM_FILE_NAME $this_script_dir/mkosi.extra/usr/local/bin/electrum \
+ln -vfs ./$electrum_file_name $this_script_dir/mkosi.extra/usr/local/bin/electrum \
 	|| exit_with_error "ln failed with exit code $?"
 
 # Helper scripts
